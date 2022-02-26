@@ -1,0 +1,88 @@
+﻿@model RandApp.Models.Item
+
+<h4>Update Item</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdateItem">
+            <input asp-for="Id" hidden />
+            <div class="form-group">
+                <label asp-for="@Model.ItemPhoto" class="control-label"></label>
+                <img src="~/assets/@Model.ItemPhoto" style="width:200px; height:300px" class="form-control" />
+                <input asp-for="@Model.ItemPhoto" hidden />
+                <span asp-validation-for="@Model.ItemPhoto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Name" class="control-label"></label>
+                <input asp-for="@Model.Name" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ItemType" class="control-label"></label>
+                <select asp-for="@Model.ItemType" class="form-control">
+                    @foreach (var itemType in Enum.GetValues(typeof(RandApp.Enums.ItemType)))
+                    {
+                        <option value="@itemType.ToString()">@itemType</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.ItemType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.MaterialType" class="control-label"></label>
+                <select asp-for="@Model.MaterialType" class="form-control">
+                    @foreach (var materialType in Enum.GetValues(typeof(RandApp.Enums.MaterialType)))
+                    {
+                        <option value="@materialType.ToString()">@materialType</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.MaterialType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Color" class="control-label"></label>
+                <select asp-for="@Model.Color" class="form-control">
+                    @foreach (var color in Enum.GetValues(typeof(RandApp.Enums.ItemColor)))
+                    {
+                        <option value="@color.ToString()">@color</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Size" class="control-label"></label>
+                <select asp-for="@Model.Size" class="form-control">
+                    @foreach (var size in Enum.GetValues(typeof(RandApp.Enums.ItemSize)))
+                    {
+                        <option value="@size.ToString()">@size</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.DesignedFor" class="control-label"></label>
+                <select asp-for="@Model.DesignedFor" class="form-control">
+                    @foreach (var desigendFor in Enum.GetValues(typeof(RandApp.Enums.DesignedFor)))
+                    {
+                        <option value="@desigendFor.ToString()">@desigendFor</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.DesignedFor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Price" class="control-label"></label>
+                <input asp-for="@Model.Price" class="form-control" />
+                <span asp-validation-for="@Model.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Description" class="control-label"></label>
+                <textarea asp-for="@Model.Description" class="form-control"></textarea>
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+                <a asp-controller="Admin" asp-action="Index" class="btn btn-primary">Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+

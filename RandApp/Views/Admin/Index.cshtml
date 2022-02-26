@@ -1,0 +1,50 @@
+﻿@model IEnumerable<RandApp.Models.Item>
+@{
+    ViewData["Title"] = "Main";
+}
+<h4>All Items</h4>
+<hr />
+<section id="item-section">
+    <div class="container">
+        <a asp-controller="Admin" asp-action="CreateItem" class="btn btn-primary">Add Item</a>
+        <div class="row d-flex justify-content-sm-around">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 py-4" style="max-width:none">
+                    <div class="card">
+                        <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Description</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class="text-info">Size:</span> @item.Size</li>
+                            <li class="list-group-item"><span class="text-info">Color:</span> @item.Color</li>
+                            <li class="list-group-item"><span class="text-info">Material Type:</span> @item.MaterialType</li>
+                            <li class="list-group-item"><span class="text-info">Designed For:</span> @item.DesignedFor</li>
+                            <li class="list-group-item"><span class="text-info">Price:</span> @item.Price ₾</li>
+                        </ul>
+                        <div class="card-body">
+                            <a asp-controller="Admin" asp-action="UpdateItem" asp-route-Id="@item.Id" class="btn btn-primary mx-1">Update Item</a>
+                            <a asp-controller="Admin" asp-action="DeleteItem" asp-route-Id="@item.Id" class="btn btn-danger mx-1">Delete Item</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        .card {
+            width: 18rem;
+            height: 100%;
+        }
+
+        .card-img-top {
+            height: 280px;
+            object-fit: cover;
+        }
+    </style>
+}

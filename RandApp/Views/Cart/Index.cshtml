@@ -1,0 +1,78 @@
+﻿@model RandApp.ViewModels.ShoppingCartViewModel
+@{
+    ViewData["Title"] = "Main";
+}
+
+@functions {
+
+    public double Calc(double price, int quantity)
+    {
+        return price * quantity;
+    }
+
+}
+
+<section id="item-section" class="m-0">
+    <div class="container">
+        <h4>Your Shopping Cart</h4>
+        <br />
+        <table class="table table-bordered table-responsive-sm table-striped text-center cart-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price(Per)</th>
+                    <th>Sum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>
+                            <div>
+                                <a asp-controller="Cart" asp-action="Delete" asp-route-Id="@item.Id" class="cart-item-remove"><i class="fa-solid fa-xmark"></i></a>
+                                <img src="~/assets/@item.Item.ItemPhoto" class="cart-item-image" />
+                            </div>
+                        </td>
+                        <td>@item.Item.Name</td>
+                        <td>
+                            @item.Quantity
+                        </td>
+                        <td>@item.Item.Price ₾</td>
+                        <td>
+                            @Calc(item.Item.Price, item.Quantity) ₾
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4" style="text-align:right">Total: </th>
+                    <td>@Model.CartTotal ₾</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        .cart-item-remove {
+            vertical-align: top;
+            margin-right: 10px;
+            cursor: pointer;
+            color: black
+        }
+
+        .cart-item-image {
+            max-height: 100px;
+            max-width: 65px
+        }
+
+        .cart-table tr td {
+            vertical-align: middle;
+        }
+    </style>
+}

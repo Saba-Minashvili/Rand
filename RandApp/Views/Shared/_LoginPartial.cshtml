@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RandApp.Repositories.Abstraction.IRepository<User> UserRepo
+
+@functions {
+    public string GetFirstName()
+    {
+        string firstName = "";
+        if (SignInManager.IsSignedIn(User))
+        {
+            // getting account Id which is a foreign key for user
+            string accountId = UserManager.GetUserId(User);
+            // getting and loop all users to find match
+            var allUsers = UserRepo.ReadAsync();
+            foreach (var user in allUsers.Result)
+            {
+                if (user.AccountId == accountId)
+                {
+                    firstName = user.FirstName;
+                }
+            }
+        }
+
+        return firstName;
+    }
+}
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="text-transform:capitalize">Hello <b>@GetFirstName()</b></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index" style="cursor:pointer"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

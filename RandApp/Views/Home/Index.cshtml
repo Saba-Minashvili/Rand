@@ -1,0 +1,63 @@
+﻿@model IEnumerable<RandApp.Models.Item>
+@{
+    ViewData["Title"] = "Main";
+}
+
+<section class="bg-light p-5 text-dark text-center text-sm-left mb-5">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1>ANZA</h1>
+                <p class="lead my-4">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                    dummy text ever since the 1500s.
+                </p>
+                <a href="#item-section" class="btn btn-primary btn-lg">Start Shopping</a>
+            </div>
+            <img class="img-fluid d-none d-sm-block w-50" src="~/assets/anza-brand-logo.jpg" />
+        </div>
+    </div>
+</section>
+<section id="item-section">
+    <div class="container">
+        <div class="row d-flex justify-content-around">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 py-4 w-auto" style="max-width:none">
+                    <div class="card">
+                        <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Description</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class="text-info">Size:</span> @item.Size</li>
+                            <li class="list-group-item"><span class="text-info">Color:</span> @item.Color</li>
+                            <li class="list-group-item"><span class="text-info">Material Type:</span> @item.MaterialType</li>
+                            <li class="list-group-item"><span class="text-info">Designed For:</span> @item.DesignedFor</li>
+                            <li class="list-group-item"><span class="text-info">Price:</span> @item.Price ₾</li>
+                        </ul>
+                        <div class="card-body">
+                            <a asp-controller="Cart" asp-action="Add" asp-route-ItemId="@item.Id" class="btn btn-primary add-to-cart-btn">Add To Cart</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        .card {
+            width: 18rem;
+            height: 100%;
+        }
+
+        .card-img-top {
+            height: 280px;
+            object-fit: cover;
+        }
+    </style>
+}
+
