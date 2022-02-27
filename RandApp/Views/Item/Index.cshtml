@@ -25,11 +25,13 @@
             {
                 <div class="col-md-3 py-4 w-auto" style="max-width:none">
                     <div class="card">
-                        <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="...">
-                        <div class="card-body">
+                        <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="@item.Name">
+                        <div class="card-body text-center p-3">
                             <h5 class="card-title">@item.Name</h5>
-                            <p class="card-text">@item.Description</p>
+                            <p class="card-text">@item.Price ₾</p>
                         </div>
+                        <a asp-controller="Item" asp-action="Details" asp-route-name="@item.Name" asp-route-Id="@item.Id" class="btn btn-dark btn-view">View</a>
+                        <!--
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><span class="text-info">Size:</span> @item.Size</li>
                             <li class="list-group-item"><span class="text-info">Color:</span> @item.Color</li>
@@ -40,6 +42,7 @@
                         <div class="card-body">
                             <a asp-controller="Cart" asp-action="Add" asp-route-ItemId="@item.Id" class="btn btn-primary add-to-cart-btn">Add To Cart</a>
                         </div>
+                        -->
                     </div>
                 </div>
             }
@@ -52,11 +55,32 @@
         .card {
             width: 18rem;
             height: 100%;
+            transition: 0.3s;
         }
+
+            .card:hover {
+                opacity: 0.9;
+                cursor: pointer;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            }
+
+                .card:hover .btn-view {
+                    display: block;
+                }
 
         .card-img-top {
             height: 280px;
             object-fit: cover;
+        }
+
+        .btn-view {
+            display: none;
+            width: 40%;
+            position: absolute;
+            top: 35%;
+            left: 30%;
+            padding: 8px;
+            background: black;
         }
     </style>
 }

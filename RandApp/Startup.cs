@@ -72,8 +72,12 @@ namespace RandApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "details",
+                    pattern: "{controller=Item}/{action=Details}/{item?}");
+                endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Item}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }
