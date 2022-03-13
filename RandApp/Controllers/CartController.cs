@@ -30,6 +30,7 @@ namespace RandApp.Controllers
             _signManager = signManager;
         }
 
+        [Route("/Cart/Index")]
         public IActionResult Index()
         {
             double total = 0;

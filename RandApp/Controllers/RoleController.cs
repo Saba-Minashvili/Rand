@@ -16,6 +16,7 @@ namespace RandApp.Controllers
         }
 
         [Authorize(Policy = "readpolicy")]
+        [Route("/Role/Index")]
         public IActionResult Index()
         {
             var roles = roleManager.Roles.ToList();
@@ -23,6 +24,7 @@ namespace RandApp.Controllers
         }
 
         [Authorize(Policy = "writepolicy")]
+        [Route("/Role/Create")]
         public IActionResult Create()
         {
             return View(new IdentityRole());

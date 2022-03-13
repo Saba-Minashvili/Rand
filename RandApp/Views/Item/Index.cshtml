@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<RandApp.Models.Item>
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+
 @{
     ViewData["Title"] = "Main";
 }
@@ -30,19 +34,10 @@
                             <h5 class="card-title">@item.Name</h5>
                             <p class="card-text">@item.Price ₾</p>
                         </div>
-                        <a asp-controller="Item" asp-action="Details" asp-route-name="@item.Name" asp-route-Id="@item.Id" class="btn btn-dark btn-view">View</a>
-                        <!--
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><span class="text-info">Size:</span> @item.Size</li>
-                            <li class="list-group-item"><span class="text-info">Color:</span> @item.Color</li>
-                            <li class="list-group-item"><span class="text-info">Material Type:</span> @item.MaterialType</li>
-                            <li class="list-group-item"><span class="text-info">Designed For:</span> @item.DesignedFor</li>
-                            <li class="list-group-item"><span class="text-info">Price:</span> @item.Price ₾</li>
-                        </ul>
-                        <div class="card-body">
-                            <a asp-controller="Cart" asp-action="Add" asp-route-ItemId="@item.Id" class="btn btn-primary add-to-cart-btn">Add To Cart</a>
-                        </div>
-                        -->
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <a asp-controller="Item" asp-action="Details" asp-route-name="@item.Name" asp-route-Id="@item.Id" class="btn btn-dark btn-view">View</a>
+                        }
                     </div>
                 </div>
             }

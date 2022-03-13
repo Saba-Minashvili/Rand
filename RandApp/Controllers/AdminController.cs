@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RandApp.Models;
 using RandApp.Repositories.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace RandApp.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [Route("/admin")]
         public async Task<IActionResult> Index()
         {
             var items = await _itemRepo.ReadAsync();
@@ -151,6 +153,78 @@ namespace RandApp.Controllers
                 return RedirectToAction("Index");
             }
             return View(item);
+        }
+
+        [HttpGet]
+        public List<string> LoadItemCategories(string designedFor)
+        {
+            var result = new List<string>();
+
+            if (designedFor.ToLower() == "men")
+            {
+                var tmp = Enum.GetNames(typeof(Enums.Category)).ToList();
+                result = tmp;
+            }
+            else if (designedFor.ToLower() == "women")
+            {
+                var tmp = Enum.GetNames(typeof(Enums.Category)).ToList();
+                result = tmp;
+            }
+            else if (designedFor.ToLower() == "kids")
+            {
+                var tmp = Enum.GetNames(typeof(Enums.Category)).Where(o => o.ToString() != Enums.Category.Bags.ToString()).ToList();
+                result = tmp;
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        public List<string> LoadItemTypes(string designedFor, string category)
+        {
+            var result = new List<string>();
+
+            if (designedFor != "" && category != "")
+            {
+                switch ((designedFor.ToLower(), category.ToLower()))
+                {
+                    case ("men", "clothing"):
+                        result = Enum.GetNames(typeof(Enums.MClothing)).ToList();
+                        break;
+                    case ("men", "bags"):
+                        result = Enum.GetNames(typeof(Enums.MBags)).ToList();
+                        break;
+                    case ("men", "shoes"):
+                        result = Enum.GetNames(typeof(Enums.MShoes)).ToList();
+                        break;
+                    case ("men", "accessories"):
+                        result = Enum.GetNames(typeof(Enums.MAccessories)).ToList();
+                        break;
+                    case ("women", "clothing"):
+                        result = Enum.GetNames(typeof(Enums.WClothing)).ToList();
+                        break;
+                    case ("women", "bags"):
+                        result = Enum.GetNames(typeof(Enums.WBags)).ToList();
+                        break;
+                    case ("women", "shoes"):
+                        result = Enum.GetNames(typeof(Enums.WShoes)).ToList();
+                        break;
+                    case ("women", "accessories"):
+                        result = Enum.GetNames(typeof(Enums.WAccessories)).ToList();
+                        break;
+                    case ("kids", "clothing"):
+                        result = Enum.GetNames(typeof(Enums.KClothing)).ToList();
+                        break;
+                    case ("kids", "shoes"):
+                        result = Enum.GetNames(typeof(Enums.KShoes)).ToList();
+                        break;
+                    case ("kids", "accessories"):
+                        result = Enum.GetNames(typeof(Enums.KAccessories)).ToList();
+                        break;
+                }
+            }
+
+            return result;
         }
     }
 }

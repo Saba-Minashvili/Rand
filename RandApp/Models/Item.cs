@@ -11,6 +11,9 @@ namespace RandApp.Models
         [Display(Name = "Item Type")]
         public string ItemType { get; set; }
         [Required]
+        [Display(Name = "Item Category")]
+        public string ItemCategory { get; set; }
+        [Required]
         [Display(Name = "Item Name")]
         public string Name { get; set; }
         [Required]

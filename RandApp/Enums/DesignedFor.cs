@@ -1,4 +1,4 @@
 ﻿namespace RandApp.Enums
 {
-    public enum DesignedFor { Male = 1, Female, Child, Other }
+    public enum DesignedFor { Men = 1, Women, Kids }
 }

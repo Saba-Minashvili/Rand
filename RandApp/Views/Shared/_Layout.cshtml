@@ -10,7 +10,7 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    @Html.Partial("_Navbar")
+    <partial name="_Navbar" />
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

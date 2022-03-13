@@ -1,0 +1,204 @@
+﻿@model IEnumerable<RandApp.Models.Item>
+@{
+    ViewData["Title"] = "Main";
+}
+
+<section id="item-section">
+    <div class="container">
+        <input hidden id="designedFor" value="@ViewBag.DesignedFor" />
+        @if (ViewBag.DesignedFor == "men" || ViewBag.DesignedFor == "women")
+        {
+            <div class="menu-category">
+                <ul class="list-group list-group-flush list-group-horizontal-sm list-menu-group">
+                    <li class="list-group-item">
+                        <div class="menu-item" val="clothing">
+                            Clothing
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-clothing">
+
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="menu-item" val="bags">
+                            Bags
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-bags">
+
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="menu-item" val="shoes">
+                            Shoes
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-shoes">
+
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="menu-item" val="accessories">
+                            Accessories
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-accessories">
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        }
+        else if (ViewBag.DesignedFor == "kids")
+        {
+            <div class="menu-category">
+                <ul class="list-group list-group-flush list-group-horizontal list-menu-group">
+                    <li class="list-group-item">
+                        <div class="menu-item" val="clothing">
+                            Clothing
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-clothing">
+
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="menu-item" val="shoes">
+                            Shoes
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-shoes">
+
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="menu-item" val="accessories">
+                            Accessories
+                            <i class="fa-solid fa-angle-down"></i>
+                        </div>
+                        <div class="menu-partial menu-partial-accessories">
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        }
+
+        <div class="row d-flex justify-content-around">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 py-4 w-auto" style="max-width:none">
+                    <div class="card">
+                        <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="@item.Name">
+                        <div class="card-body text-center p-3">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Price ₾</p>
+                        </div>
+                        <a asp-controller="Item" asp-action="Details" asp-route-name="@item.Name" asp-route-Id="@item.Id" class="btn btn-dark btn-view">View</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        .card {
+            width: 18rem;
+            height: 100%;
+            transition: 0.3s;
+        }
+
+            .card:hover {
+                opacity: 0.9;
+                cursor: pointer;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            }
+
+                .card:hover .btn-view {
+                    display: block;
+                }
+
+        .card-img-top {
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .btn-view {
+            display: none;
+            width: 40%;
+            position: absolute;
+            top: 35%;
+            left: 30%;
+            padding: 8px;
+            background: black;
+        }
+
+        .list-menu-group {
+            width: 80%;
+            justify-content: space-between;
+        }
+
+            .list-menu-group li {
+                border: none;
+                max-width: 150px;
+            }
+
+        .menu-item {
+            text-decoration: none;
+            color: black !important;
+            font-weight: 700;
+            opacity: 0.85;
+        }
+
+            .menu-item:hover {
+                cursor: pointer;
+                opacity: 1;
+                text-decoration: none;
+                color: black;
+            }
+
+        .menu-partial {
+            width: 80px;
+            padding-top: 10px;
+            transition: 0.7s;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        var url = '@Url.Action("LoadMenuCategory", "Menu")';
+        var rendered = false;
+        var className;
+        $('.menu-item').click(function () {
+            if (rendered == false) {
+                var designedForVal = $('#designedFor').val();
+                var categoryVal = $(this).attr('val');
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("LoadMenuCategory","Menu")',
+                    dataType: 'html',
+                    data: { designedFor: designedForVal, category: categoryVal },
+                    success: function (res) {
+                        className = ".menu-partial-" + categoryVal;
+                        $(className).html(res);
+                        rendered = true;
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+        $('.menu-item').click(function () {
+            if (rendered == true) {
+                $(className).html('');
+            }
+
+            rendered = false;
+        });
+    </script>
+}
+

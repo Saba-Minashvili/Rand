@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RandApp.Data;
 
-namespace RandApp.Data.Migrations
+namespace RandApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220222083542_tables-added")]
-    partial class tablesadded
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,6 +256,10 @@ namespace RandApp.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DesignedFor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemCategory")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

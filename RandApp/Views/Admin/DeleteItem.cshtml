@@ -17,12 +17,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="@Model.ItemType" class="control-label"></label>
-                <select asp-for="@Model.ItemType" disabled class="form-control">
-                    @foreach (var itemType in Enum.GetValues(typeof(RandApp.Enums.ItemType)))
+                <!--
+                    <select asp-for="Model.ItemType" class="form-control">
+                    foreach (var itemType in Enum.GetValues(typeof(RandApp.Enums.ItemType)))
                     {
-                        <option value="@itemType.ToString()">@itemType</option>
+                        <option value="itemType.ToString()">itemType</option>
                     }
                 </select>
+                -->
             </div>
             <div class="form-group">
                 <label asp-for="@Model.MaterialType" class="control-label"></label>
