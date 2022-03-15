@@ -2,7 +2,7 @@
 
 <section class="item-details">
     <div class="container">
-        <a asp-controller="Item" asp-action="Index" class="go-back-btn"><i class="fa-solid fa-arrow-left-long"></i>  Go Back</a>
+        <a asp-controller="Item" asp-action="ReturnUrl" asp-route-returnUrl="@ViewBag.returnUrl" class="go-back-btn"><i class="fa-solid fa-arrow-left-long"></i>  Go Back</a>
         <div class="d-flex align-items-center justify-content-between mt-5">
             <aside class="mw-100 p-3 side-left">
                 <img class="item-img" src="~/assets/@Model.ItemPhoto" />

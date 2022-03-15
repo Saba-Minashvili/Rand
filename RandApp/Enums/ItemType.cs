@@ -3,7 +3,7 @@
     // W - Means For Women
     public enum WClothing
     {
-        Coats = 1, Outerwear, Jackets, Dresses, Co_ords, Sweaters, Shirts, Tops,
+        Coats = 1, Outerwear, Jackets, Dresses, Sweaters, Shirts, Tops,
         T_Shirts, Sweatershirts, Pants, Skirts, Swimwear, Underwear
     }
     public enum WBags
@@ -23,7 +23,7 @@
     // M - Means For Men
     public enum MClothing
     {
-        Coats = 1, Outerwear, Co_ords, Sweaters, Sweatshirts, T_shirts, Pants,
+        Coats = 1, Outerwear, Sweaters, Sweatshirts, T_shirts, Pants,
         Swimwear, Underwear
     }
     public enum MBags

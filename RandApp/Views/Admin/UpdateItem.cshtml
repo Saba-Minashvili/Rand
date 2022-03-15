@@ -8,7 +8,7 @@
             <input asp-for="Id" hidden />
             <div class="form-group">
                 <label asp-for="@Model.ItemPhoto" class="control-label"></label>
-                <img src="~/assets/@Model.ItemPhoto" style="width:200px; height:300px" class="form-control" />
+                <img src="~/assets/@Model.ItemPhoto" style="width:230px; height:300px; object-fit:cover" class="form-control" />
                 <input asp-for="@Model.ItemPhoto" hidden />
                 <span asp-validation-for="@Model.ItemPhoto" class="text-danger"></span>
             </div>
@@ -18,15 +18,27 @@
                 <span asp-validation-for="@Model.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.ItemType" class="control-label"></label>
-                <!--
-                    <select asp-for="Model.ItemType" class="form-control">
-                    foreach (var itemType in Enum.GetValues(typeof(RandApp.Enums.ItemType)))
+                <label asp-for="@Model.DesignedFor" class="control-label"></label>
+                <select asp-for="@Model.DesignedFor" class="form-control">
+                    @foreach (var desigendFor in Enum.GetValues(typeof(RandApp.Enums.DesignedFor)))
                     {
-                        <option value="itemType.ToString()">itemType</option>
+                        <option val="@desigendFor" value="@desigendFor.ToString()">@desigendFor</option>
                     }
                 </select>
-                -->
+                <span asp-validation-for="@Model.DesignedFor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ItemCategory" class="control-label"></label>
+                <select asp-for="@Model.ItemCategory" class="form-control">
+                    <option>@Model.ItemCategory</option>
+                </select>
+                <span asp-validation-for="@Model.ItemCategory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ItemType" class="control-label"></label>
+                <select asp-for="@Model.ItemType" class="form-control">
+                    <option>@Model.ItemType</option>
+                </select>
                 <span asp-validation-for="@Model.ItemType" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -60,16 +72,6 @@
                 <span asp-validation-for="@Model.Size" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.DesignedFor" class="control-label"></label>
-                <select asp-for="@Model.DesignedFor" class="form-control">
-                    @foreach (var desigendFor in Enum.GetValues(typeof(RandApp.Enums.DesignedFor)))
-                    {
-                        <option value="@desigendFor.ToString()">@desigendFor</option>
-                    }
-                </select>
-                <span asp-validation-for="@Model.DesignedFor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="@Model.Price" class="control-label"></label>
                 <input asp-for="@Model.Price" class="form-control" />
                 <span asp-validation-for="@Model.Price" class="text-danger"></span>
@@ -86,5 +88,58 @@
         </form>
     </div>
 </div>
+@section Scripts
+{
+    <script>
+        $(window).on("load", function () {
+            if ($("#DesignedFor").val() != "") {
+                var selectedVal = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("LoadItemCategories","Admin")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { designedFor: selectedVal },
+                    success: function (res) {
+                        $('#ItemCategory').html('');
+                        $.each(res, function (val,text) {
+                            $('#ItemCategory').append(
+                                $('<option></option>').val(text).html(text)
+                            );
+                        });
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                    }
+                });
+            }
 
-
+            if ($("#ItemCategory").val() != "") {
+                var selectedCategoryVal = $(this).val();
+                var selectedDesignedVal = $('#DesignedFor').val();
+                $.ajax({
+                    url: '@Url.Action("LoadItemTypes", "Admin")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { designedFor: selectedDesignedVal, category: selectedCategoryVal },
+                    success: function (res) {
+                        $('#ItemType').html('');
+                        $.each(res, function (val,text) {
+                            $('#ItemType').append(
+                                $('<option></option>').val(text).html(text)
+                            );
+                        });
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                    }
+                });
+            }
+        })
+        function SetValue(input) {
+            var fileName = input.files[0].name;
+            //asp-for will generate the id and name
+            //so you can get the selector by using $("#ItemPhoto")
+            $("#ItemPhoto").val(fileName);
+        }
+    </script>
+}

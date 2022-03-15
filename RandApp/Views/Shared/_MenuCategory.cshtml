@@ -6,6 +6,15 @@
         padding-right: 0px;
         width: auto;
     }
+
+        .list-group-menu-item a {
+            color: black;
+        }
+
+            .list-group-menu-item a:hover {
+                color: black;
+                font-weight: 500;
+            }
 </style>
 <div>
     <ul class="list-group list-group-flush">
@@ -15,61 +24,82 @@
             {
                 case ("men", "clothing"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.MClothing), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="men" asp-route-category="clothing" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.MClothing), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.MClothing), type)
+                        </a>
                     </li>
                     break;
                 case ("men", "bags"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.MBags), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="men" asp-route-category="bags" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.MBags), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.MBags), type)
+                        </a>
                     </li>
                     break;
                 case ("men", "shoes"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.MShoes), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="men" asp-route-category="shoes" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.MShoes), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.MShoes), type)
+                        </a>
                     </li>
                     break;
                 case ("men", "accessories"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.MAccessories), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="men" asp-route-category="accessories" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.MAccessories), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.MAccessories), type)
+                        </a>
                     </li>
                     break;
                 case ("women", "clothing"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.WClothing), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="women" asp-route-category="clothing" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.WClothing), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.WClothing), type)
+                        </a>
                     </li>
                     break;
                 case ("women", "bags"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.WBags), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="women" asp-route-category="bags" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.WBags), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.WBags), type)
+                        </a>
                     </li>
                     break;
                 case ("women", "shoes"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.WShoes), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="women" asp-route-category="shoes" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.WShoes), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.WShoes), type)
+                        </a>
                     </li>
                     break;
                 case ("women", "accessories"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.WAccessories), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="women" asp-route-category="accessories" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.WAccessories), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.WAccessories), type)
+                        </a>
                     </li>
                     break;
                 case ("kids", "clothing"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.KClothing), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="kids" asp-route-category="clothing" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.KClothing), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.KClothing), type)
+                        </a>
                     </li>
                     break;
                 case ("kids", "shoes"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.KShoes), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="kids" asp-route-category="shoes" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.KShoes), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.KShoes), type)
+                        </a>
                     </li>
                     break;
                 case ("kids", "accessories"):
                     <li class="list-group-item list-group-menu-item">
-                        <a class="text-decoration-none">@Enum.ToObject(typeof(RandApp.Enums.KAccessories), type)</a>
+                        <a class="text-decoration-none" asp-controller="Item" asp-action="IndexFor" asp-route-designedFor="kids" asp-route-category="accessories" asp-route-type="@Enum.ToObject(typeof(RandApp.Enums.KAccessories), type).ToString().ToLower()">
+                            @Enum.ToObject(typeof(RandApp.Enums.KAccessories), type)
+                        </a>
                     </li>
                     break;
             }
         }
     </ul>
 </div>
-

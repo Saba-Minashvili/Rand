@@ -1,109 +1,137 @@
 ﻿@model IEnumerable<RandApp.Models.Item>
 @{
-    ViewData["Title"] = "Main";
+    ViewData["Title"] = "IndexFor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section id="item-section">
-    <div class="container">
-        <input hidden id="designedFor" value="@ViewBag.DesignedFor" />
-        @if (ViewBag.DesignedFor == "men" || ViewBag.DesignedFor == "women")
-        {
-            <div class="menu-category">
-                <ul class="list-group list-group-flush list-group-horizontal-sm list-menu-group">
-                    <li class="list-group-item">
-                        <div class="menu-item" val="clothing">
-                            Clothing
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-clothing">
-
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="menu-item" val="bags">
-                            Bags
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-bags">
-
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="menu-item" val="shoes">
-                            Shoes
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-shoes">
-
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="menu-item" val="accessories">
-                            Accessories
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-accessories">
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        }
-        else if (ViewBag.DesignedFor == "kids")
-        {
-            <div class="menu-category">
-                <ul class="list-group list-group-flush list-group-horizontal list-menu-group">
-                    <li class="list-group-item">
-                        <div class="menu-item" val="clothing">
-                            Clothing
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-clothing">
-
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="menu-item" val="shoes">
-                            Shoes
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-shoes">
-
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="menu-item" val="accessories">
-                            Accessories
-                            <i class="fa-solid fa-angle-down"></i>
-                        </div>
-                        <div class="menu-partial menu-partial-accessories">
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        }
-
-        <div class="row d-flex justify-content-around">
-            @foreach (var item in Model)
+@if (Model.Count() > 0)
+{
+    <section id="item-section">
+        <div class="container">
+            <input hidden id="designedFor" value="@ViewBag.DesignedFor" />
+            @if (ViewBag.DesignedFor == "men" || ViewBag.DesignedFor == "women")
             {
-                <div class="col-md-3 py-4 w-auto" style="max-width:none">
-                    <div class="card">
-                        <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="@item.Name">
-                        <div class="card-body text-center p-3">
-                            <h5 class="card-title">@item.Name</h5>
-                            <p class="card-text">@item.Price ₾</p>
-                        </div>
-                        <a asp-controller="Item" asp-action="Details" asp-route-name="@item.Name" asp-route-Id="@item.Id" class="btn btn-dark btn-view">View</a>
-                    </div>
+                <div class="menu-category">
+                    <ul class="list-group list-group-flush list-group-horizontal-sm list-menu-group">
+                        <li class="list-group-item">
+                            <div class="menu-item" val="clothing">
+                                Clothing
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-clothing">
+
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="menu-item" val="bags">
+                                Bags
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-bags">
+
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="menu-item" val="shoes">
+                                Shoes
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-shoes">
+
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="menu-item" val="accessories">
+                                Accessories
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-accessories">
+
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             }
-        </div>
-    </div>
-</section>
+            else if (ViewBag.DesignedFor == "kids")
+            {
+                <div class="menu-category">
+                    <ul class="list-group list-group-flush list-group-horizontal list-menu-group">
+                        <li class="list-group-item">
+                            <div class="menu-item" val="clothing">
+                                Clothing
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-clothing">
 
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="menu-item" val="shoes">
+                                Shoes
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-shoes">
+
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="menu-item" val="accessories">
+                                Accessories
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="menu-partial menu-partial-accessories">
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Item" asp-action="ReturnUrl" asp-route-returnUrl="@ViewBag.returnUrl" class="go-back-btn"><i class="fa-solid fa-arrow-left-long"></i>  Go Back</a>
+            }
+
+            <div class="row d-flex justify-content-around">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3 py-4 w-auto" style="max-width:none">
+                        <div class="card">
+                            <img src="~/assets/@item.ItemPhoto" class="card-img-top" alt="@item.Name">
+                            <div class="card-body text-center p-3">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="card-text">@item.Price ₾</p>
+                            </div>
+                            <a asp-controller="Item" asp-action="Details" asp-route-name="@item.Name" asp-route-Id="@item.Id" class="btn btn-dark btn-view">View</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <a asp-controller="Item" asp-action="ReturnUrl" asp-route-returnUrl="@ViewBag.returnUrl" class="go-back-btn"><i class="fa-solid fa-arrow-left-long"></i>  Go Back</a>
+    <p style="text-align:center">No item was found.</p>
+}
 @section Styles {
     <style>
+        .go-back-btn {
+            text-decoration: none;
+            color: black;
+            opacity: 0.9;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+            .go-back-btn:hover {
+                cursor: pointer;
+                text-decoration: none;
+                color: black;
+                font-size: 16px;
+                opacity: 1;
+            }
+
         .card {
             width: 18rem;
             height: 100%;
@@ -136,7 +164,7 @@
         }
 
         .list-menu-group {
-            width: 80%;
+            width: 100%;
             justify-content: space-between;
         }
 
@@ -196,8 +224,28 @@
             if (rendered == true) {
                 $(className).html('');
             }
-
             rendered = false;
+        });
+        $('.category-item').click(function () {
+            if (rendered == false) {
+                var designedForVal = $('#designedFor').val();
+                var categoryVal = $(this).attr('val');
+                var typeVal = $(this).text();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("IndexFor","Item")',
+                    dataType: 'html',
+                    data: { designedFor: designedForVal, category: categoryVal, type: typeVal },
+                    success: function (res) {
+                        className = ".menu-partial-" + categoryVal;
+                        $(className).html(res);
+                        rendered = true;
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
         });
     </script>
 }
