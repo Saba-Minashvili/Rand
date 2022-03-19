@@ -8,7 +8,7 @@
     }
     public enum WBags
     {
-        Shoulder = 1, Crossbody, Hand, Bucket, Clutch, Backpacks, Shoppers, Mini
+        ShoulderBags = 1, CrossbodyBags, Handbags, BucketBags, Clutch, Backpacks, Shoppers, Mini
     }
     public enum WShoes
     {
@@ -28,7 +28,7 @@
     }
     public enum MBags
     {
-        Bags, Crossbody, Backpacks, Clutches, Belt, Shoppers
+        Bags, CrossbodyBags, Backpacks, Clutches, BeltBags, Shoppers
     }
     public enum MShoes
     {

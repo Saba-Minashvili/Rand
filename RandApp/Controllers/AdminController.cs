@@ -226,5 +226,73 @@ namespace RandApp.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        public List<int> LoadItemSizes(string designedFor, string category, string itemType)
+        {
+            var result = new List<int>();
+            if (designedFor != "" && category != "" && itemType != "")
+            {
+                switch (designedFor.ToLower(), category.ToLower(), itemType.ToLower())
+                {
+                    case ("men", "accessories", "belts"):
+                    case ("women", "accessories", "belts"):
+                        result = Enum.GetValues(typeof(Enums.BeltSize)).Cast<Enums.BeltSize>().Select(o => (int)o).ToList();
+                        break;
+                    case ("men", "accessories", "ties"):
+                        result = Enum.GetValues(typeof(Enums.TieSize)).Cast<Enums.TieSize>().Select(o => (int)o).ToList();
+                        break;
+                    default:
+                        result = Enum.GetValues(typeof(Enums.SingleSize)).Cast<Enums.SingleSize>().Select(o => (int)o).ToList();
+                        break;
+                }
+            }
+
+            return result;
+        }
+
+
+        // this method is for item categories that have same sizes and
+        // don't require specifying item type
+        [HttpGet]
+        public List<string> LoadItemSize(string designedFor, string category)
+        {
+            var result = new List<string>();
+            var enumValues = new List<int>();
+            if (designedFor != "" && category != "")
+            {
+                switch (designedFor.ToLower(), category.ToLower())
+                {
+                    case ("kids", "shoes"):
+                        result = Enum.GetNames(typeof(Enums.KShoes)).ToList();
+                        break;
+                    case ("men", "shoes"):
+                    case ("women", "shoes"):
+                        enumValues = Enum.GetValues(typeof(Enums.ShoeSize)).Cast<Enums.ShoeSize>().Select(o => (int)o).ToList();
+                        foreach (var item in enumValues)
+                        {
+                            result.Add(item.ToString());
+                        }
+                        break;
+                    case ("men", "clothing"):
+                    case ("women", "clothing"):
+                    case ("kids", "clothing"):
+                        result = Enum.GetNames(typeof(Enums.ClothingSize)).ToList();
+                        break;
+                    case ("men", "accessories"):
+                    case ("women", "accessories"):
+                    case ("kids", "accessories"):
+                        result = Enum.GetNames(typeof(Enums.SingleSize)).ToList();
+                        break;
+                    case ("men", "hats"):
+                    case ("women", "hats"):
+                    case ("kids", "hats"):
+                        result = Enum.GetNames(typeof(Enums.SingleSize)).ToList();
+                        break;
+                }
+            }
+
+            return result;
+        }
     }
 }

@@ -19,7 +19,7 @@
             <div class="form-group">
                 <label asp-for="@Model.DesignedFor" class="control-label"></label>
                 <select asp-for="@Model.DesignedFor" class="form-control">
-                    <option value="" selected>Select Category</option>
+                    <option value="" selected>Select Designed For</option>
                     @foreach (var desigendFor in Enum.GetValues(typeof(RandApp.Enums.DesignedFor)))
                     {
                         <option val="@desigendFor" value="@desigendFor.ToString()">@desigendFor</option>
@@ -30,44 +30,44 @@
             <div class="form-group">
                 <label asp-for="@Model.ItemCategory" class="control-label"></label>
                 <select asp-for="@Model.ItemCategory" class="form-control">
-                    <option value="" selected>Select Category</option>
                 </select>
                 <span asp-validation-for="@Model.ItemCategory" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.ItemType" class="control-label"></label>
                 <select asp-for="@Model.ItemType" class="form-control">
-                    <option value="" selected>Select Item Type</option>
                 </select>
                 <span asp-validation-for="@Model.ItemType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.MaterialType" class="control-label"></label>
                 <select asp-for="@Model.MaterialType" class="form-control">
+                    <option value="" selected>Select Material Type</option>
                     @foreach (var materialType in Enum.GetValues(typeof(RandApp.Enums.MaterialType)))
                     {
                         <option value="@materialType.ToString()">@materialType</option>
                     }
+                    <option value="Other">Other</option>
                 </select>
+                <input id="otherMaterialInp" asp-for="@Model.MaterialType" class="form-control" style="display:none; margin-top:8px" placeholder="Enter Material Type" />
                 <span asp-validation-for="@Model.MaterialType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Color" class="control-label"></label>
                 <select asp-for="@Model.Color" class="form-control">
+                    <option value="" selected>Select Item Color</option>
                     @foreach (var color in Enum.GetValues(typeof(RandApp.Enums.ItemColor)))
                     {
                         <option value="@color.ToString()">@color</option>
                     }
+                    <option value="Other">Other</option>
                 </select>
+                <input id="otherColorInp" asp-for="@Model.Color" class="form-control" style="display:none; margin-top:8px" placeholder="Enter Item Color" />
                 <span asp-validation-for="@Model.Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Size" class="control-label"></label>
                 <select asp-for="@Model.Size" class="form-control">
-                    @foreach (var size in Enum.GetValues(typeof(RandApp.Enums.ItemSize)))
-                    {
-                        <option value="@size.ToString()">@size</option>
-                    }
                 </select>
                 <span asp-validation-for="@Model.Size" class="text-danger"></span>
             </div>
@@ -97,9 +97,10 @@
             $("#ItemPhoto").val(fileName);
         }
 
+        // loads item categories
         $('#DesignedFor').on('change', function () {
+            var selectedVal = $(this).val();
             if ($("#DesignedFor").val() != "") {
-                var selectedVal = $(this).val();
                 $.ajax({
                     url: '@Url.Action("LoadItemCategories","Admin")',
                     type: 'GET',
@@ -107,6 +108,9 @@
                     data: { designedFor: selectedVal },
                     success: function (res) {
                         $('#ItemCategory').html('');
+                        $('#ItemCategory').append(
+                            $('<option value selected></option>').html("Select Item Category"),
+                        );
                         $.each(res, function (val,text) {
                             $('#ItemCategory').append(
                                 $('<option></option>').val(text).html(text)
@@ -120,10 +124,11 @@
             }
         });
 
+        // loads item types
         $('#ItemCategory').on('change', function () {
+            var selectedCategoryVal = $(this).val();
+            var selectedDesignedVal = $('#DesignedFor').val();
             if ($("#ItemCategory").val() != "") {
-                var selectedCategoryVal = $(this).val();
-                var selectedDesignedVal = $('#DesignedFor').val();
                 $.ajax({
                     url: '@Url.Action("LoadItemTypes", "Admin")',
                     type: 'GET',
@@ -131,7 +136,10 @@
                     data: { designedFor: selectedDesignedVal, category: selectedCategoryVal },
                     success: function (res) {
                         $('#ItemType').html('');
-                        $.each(res, function (val,text) {
+                        $('#ItemType').append(
+                            $('<option value selected></option>').html("Select Item Type"),
+                        );
+                        $.each(res, function (val, text) {
                             $('#ItemType').append(
                                 $('<option></option>').val(text).html(text)
                             );
@@ -143,6 +151,87 @@
                 });
             }
         });
+
+
+        // loads item sizes
+        $('#ItemType').on('change', function () {
+            var selectedItemTypeVal = $(this).val();
+            var selectedDesignedVal = $("#DesignedFor").val();
+            var selectedCategoryVal = $("#ItemCategory").val();
+            if (selectedCategoryVal.toLowerCase() == "clothing" || selectedCategoryVal.toLowerCase() == "shoes")
+                {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemSize", "Admin")',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: { designedFor: selectedDesignedVal, category: selectedCategoryVal },
+                        success: function (res) {
+                            $('#Size').html('');
+                            $('#Size').append(
+                                $('<option value selected></option>').html("Select Item Size"),
+                            );
+                        $.each(res, function (val, text) {
+                            $('#Size').append(
+                                $('<option></option>').val(text).html(text)
+                            );
+                        });
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '@Url.Action("LoadItemSizes", "Admin")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { designedFor: selectedDesignedVal, category: selectedCategoryVal, itemType: selectedItemTypeVal },
+                    success: function (res) {
+                        $('#Size').html('');
+                        $('#Size').append(
+                            $('<option value selected></option>').html("Select Item Size"),
+                        );
+                        $.each(res, function (val, text) {
+                            // This "1" means "SingleSize" enum value
+                            if (text == 1) {
+                                $('#Size').append(
+                                    $('<option></option>').val(text).html("Single Size")
+                                );
+                            } else {
+                                $('#Size').append(
+                                    $('<option></option>').val(text).html(text + " CM")
+                                );
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                    }
+                });
+            }
+        });
+
+        // displays "other option" input in order to enter custom material type
+        // if desired is not given in the list
+        $('#MaterialType').on('change', function () {
+            var selectedMaterialTypeVal = $(this).val();
+            if (selectedMaterialTypeVal.toLowerCase() == "other") {
+                $('#otherMaterialInp').show();
+            } else {
+                $('#otherMaterialInp').hide();
+            }
+        })
+
+        // displays "other option" input in order to enter custom item color
+        // if desired is not given in the list
+        $('#Color').on('change', function () {
+            var selectedColorVal = $(this).val();
+            if (selectedColorVal.toLowerCase() == "other") {
+                $('#otherColorInp').show();
+            } else {
+                $('#otherColorInp').hide();
+            }
+        })
     </script>
 }
 
