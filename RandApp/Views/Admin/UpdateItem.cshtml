@@ -44,30 +44,33 @@
             <div class="form-group">
                 <label asp-for="@Model.MaterialType" class="control-label"></label>
                 <select asp-for="@Model.MaterialType" class="form-control">
+                    <option value="" selected>Select Material Type</option>
                     @foreach (var materialType in Enum.GetValues(typeof(RandApp.Enums.MaterialType)))
                     {
                         <option value="@materialType.ToString()">@materialType</option>
                     }
+                    <option value="Other">Other</option>
                 </select>
+                <input id="otherMaterialInp" asp-for="@Model.MaterialType" class="form-control" style="display:none; margin-top:8px" placeholder="Enter Material Type" />
                 <span asp-validation-for="@Model.MaterialType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Color" class="control-label"></label>
                 <select asp-for="@Model.Color" class="form-control">
+                    <option value="@Model.Color" selected>@Model.Color</option>
                     @foreach (var color in Enum.GetValues(typeof(RandApp.Enums.ItemColor)))
                     {
                         <option value="@color.ToString()">@color</option>
                     }
+                    <option value="Other">Other</option>
                 </select>
+                <input id="otherColorInp" asp-for="@Model.Color" class="form-control" style="display:none; margin-top:8px" placeholder="Enter Item Color" />
                 <span asp-validation-for="@Model.Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Size" class="control-label"></label>
                 <select asp-for="@Model.Size" class="form-control">
-                    @foreach (var size in Enum.GetValues(typeof(RandApp.Enums.ClothingSize)))
-                    {
-                        <option value="@size.ToString()">@size</option>
-                    }
+                    <option value="@Model.Size" selected>@Model.Size</option>
                 </select>
                 <span asp-validation-for="@Model.Size" class="text-danger"></span>
             </div>
@@ -91,17 +94,19 @@
 @section Scripts
 {
     <script>
-        $(window).on("load", function () {
+        var selectedItemTypeVal = $("#ItemType").val();
+        var selectedDesignedVal = $("#DesignedFor").val();
+        var selectedCategoryVal = $("#ItemCategory").val();
+        $(document).ready(function () {
             if ($("#DesignedFor").val() != "") {
-                var selectedVal = $(this).val();
                 $.ajax({
                     url: '@Url.Action("LoadItemCategories","Admin")',
                     type: 'GET',
                     dataType: 'json',
-                    data: { designedFor: selectedVal },
+                    data: { designedFor: selectedDesignedVal },
                     success: function (res) {
                         $('#ItemCategory').html('');
-                        $.each(res, function (val,text) {
+                        $.each(res, function (val, text) {
                             $('#ItemCategory').append(
                                 $('<option></option>').val(text).html(text)
                             );
@@ -114,8 +119,6 @@
             }
 
             if ($("#ItemCategory").val() != "") {
-                var selectedCategoryVal = $(this).val();
-                var selectedDesignedVal = $('#DesignedFor').val();
                 $.ajax({
                     url: '@Url.Action("LoadItemTypes", "Admin")',
                     type: 'GET',
@@ -123,7 +126,7 @@
                     data: { designedFor: selectedDesignedVal, category: selectedCategoryVal },
                     success: function (res) {
                         $('#ItemType').html('');
-                        $.each(res, function (val,text) {
+                        $.each(res, function (val, text) {
                             $('#ItemType').append(
                                 $('<option></option>').val(text).html(text)
                             );
@@ -134,12 +137,84 @@
                     }
                 });
             }
-        })
+
+            if ($("#ItemType").val() != "") {
+                if (selectedCategoryVal.toLowerCase() == "clothing" || selectedCategoryVal.toLowerCase() == "shoes") {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemSize", "Admin")',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: { designedFor: selectedDesignedVal, category: selectedCategoryVal },
+                        success: function (res) {
+                            $.each(res, function (val, text) {
+                                $('#Size').append(
+                                    $('<option></option>').val(text).html(text)
+                                );
+                            });
+                        },
+                        error: function (err) {
+                            console.log(err.responseText);
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemSizes", "Admin")',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: { designedFor: selectedDesignedVal, category: selectedCategoryVal, itemType: selectedItemTypeVal },
+                        success: function (res) {
+                            $.each(res, function (val, text) {
+                                // This "1" means "SingleSize" enum value
+                                if (text == 1) {
+                                    $('#Size').append(
+                                        $('<option></option>').val(text).html("Single Size")
+                                    );
+                                } else {
+                                    $('#Size').append(
+                                        $('<option></option>').val(text).html(text + " CM")
+                                    );
+                                }
+                            });
+                        },
+                        error: function (err) {
+                            console.log(err.responseText);
+                        }
+                    });
+                }
+            }
+        });
+
         function SetValue(input) {
             var fileName = input.files[0].name;
             //asp-for will generate the id and name
             //so you can get the selector by using $("#ItemPhoto")
             $("#ItemPhoto").val(fileName);
-        }
+        };
+
+        // displays "other option" input in order to enter custom material type
+        // if desired is not given in the list
+        $('#MaterialType').on('change', function () {
+            var selectedMaterialTypeVal = $(this).val();
+            if (selectedMaterialTypeVal.toLowerCase() == "other") {
+                $('#MaterialType').attr('disabled', 'disabled');
+                $('#otherMaterialInp').show();
+            } else {
+                $('#MaterialType').removeAttr('disabled');
+                $('#otherMaterialInp').hide();
+            }
+        });
+
+        // displays "other option" input in order to enter custom item color
+        // if desired is not given in the list
+        $('#Color').on('change', function () {
+            var selectedColorVal = $(this).val();
+            if (selectedColorVal.toLowerCase() == "other") {
+                $('#Color').attr('disabled','disabled');
+                $('#otherColorInp').show();
+            } else {
+                $('#Color').removeAttr('disabled');
+                $('#otherColorInp').hide();
+            }
+        });
     </script>
 }

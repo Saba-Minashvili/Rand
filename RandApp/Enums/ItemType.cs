@@ -24,7 +24,7 @@
     public enum MClothing
     {
         Coats = 1, Outerwear, Sweaters, Sweatshirts, T_shirts, Pants,
-        Swimwear, Underwear
+        Swimwear, Underwear, Suits
     }
     public enum MBags
     {
