@@ -54,7 +54,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Color" class="control-label"></label>
-                <select asp-for="@Model.Color" multiple class="form-control">
+                <select asp-for="@Model.Color" class="form-control">
                     <option value="" selected>Select Item Color</option>
                     @foreach (var color in Enum.GetValues(typeof(RandApp.Enums.ItemColor)))
                     {
@@ -67,7 +67,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Size" class="control-label"></label>
-                <select asp-for="@Model.Size" multiple class="form-control">
+                <select asp-for="@Model.Size" class="form-control">
                 </select>
                 <span asp-validation-for="@Model.Size" class="text-danger"></span>
             </div>
