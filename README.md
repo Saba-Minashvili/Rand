@@ -28,7 +28,4 @@ visit following files in project and uncomment commented code(you will see instr
 * /Controllers/RoleController.cs, 
 * /Areas/Identity/Pages/Account/Register.cshtml,
 * /Areas/Identity/Pages/Account/Register.cshtml.cs
-
-When you finish doing all these, you can register new account as an admin or any other role you want.
-
-3) Feel free to use application :)
+3) When you finish doing all these, you can register new account as an admin or any other role you want and feel free to use application :)
