@@ -20,5 +20,13 @@ Project is created with:
 * Bootstrap
 	
 ## Setup
-To run this project, you just need to pull the project. The only thing you need to change is local 
-Database connection string and make migration only once to create tables.
+To run this project, first you need to pull the project. Then do the following step:
+1) Change local database connection string, which is located in 'appsettings.json' file and then make migration only once to initialize tables.
+2) You can add roles, like Admin, which gives you permission to add, create, update or delete product and have full control over them. In order to do this you need to
+visit following files in project and uncomment commented code(you will see instructions above code): 
+* /Views/Shared/_Navbar.cshtml, 
+* /Controllers/RoleController.cs, 
+* /Areas/Identity/Pages/Account/Register.cshtml,
+* /Areas/Identity/Pages/Account/Register.cshtml.cs
+When you finish doing all these, you can register new account as an admin or any other role you want.
+3) Feel free to use application.
