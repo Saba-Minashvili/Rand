@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RandApp.DTOs;
 using RandApp.Models;
 using RandApp.Repositories.Abstraction;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,35 +13,30 @@ namespace RandApp.Controllers
     public class ItemController : Controller
     {
         private readonly IRepository<Item> _itemRepo = default;
+        private readonly IMapper _mapper = default;
 
-        public ItemController(IRepository<Item> itemRepo)
+        public ItemController(IRepository<Item> itemRepo, IMapper mapper)
         {
             _itemRepo = itemRepo;
-        }
-
-        [HttpGet]
-        [Route("item/details")]
-        public async Task<IActionResult> Details(int id)
-        {
-            var item = await _itemRepo.ReadByIdAsync(id);
-            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
-            return View(item);
+            _mapper = mapper;
         }
 
         [Route("")]
         public async Task<IActionResult> Index()
         {
             var items = await _itemRepo.ReadAsync();
-            return View(items);
+            var result = _mapper.Map<IEnumerable<ItemDto>>(items);
+            return View(result);
         }
 
         [Route("/items/{designedFor}")]
         public IActionResult IndexFor(string designedFor)
         {
-            var items = _itemRepo.ReadAsync().Result.ToList();
-            var result = items.FindAll(o => o.DesignedFor.ToLower() == designedFor.ToLower());
+            var items = _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).ToList();
+            var filteredItems = items.FindAll(o => o.DesignedFor.ToLower() == designedFor.ToLower());
             ViewBag.DesignedFor = designedFor.ToLower();
             ViewBag.returnUrl = Request.Headers["Referer"].ToString();
+            var result = _mapper.Map<List<ItemDto>>(filteredItems);
             return View(result);
         }
 
@@ -46,17 +45,29 @@ namespace RandApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var items = _itemRepo.ReadAsync().Result.ToList();
-                var result = items
+                var items = _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).ToList();
+                var filteredItems = items
                     .FindAll(o => o.DesignedFor.ToLower() == designedFor.ToLower())
                     .Where(o => o.ItemCategory.ToLower() == category.ToLower() && o.ItemType.ToLower() == type.ToLower())
                     .ToList();
                 ViewBag.returnUrl = Request.Headers["Referer"].ToString();
+                var result = _mapper.Map<List<ItemDto>>(filteredItems);
                 return View(result);
             }
 
             return View();
         }
+
+        [HttpGet]
+        [Route("item/details")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var item = await _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).FirstOrDefaultAsync(o => o.Id == id);
+            ViewBag.returnUrl = Request.Headers["Referer"].ToString();
+            var result = _mapper.Map<ItemDto>(item);
+            return View(result);
+        }
+
 
         public IActionResult ReturnUrl(string returnUrl)
         {

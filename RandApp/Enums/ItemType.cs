@@ -4,7 +4,7 @@
     public enum WClothing
     {
         Coats = 1, Outerwear, Jackets, Dresses, Sweaters, Shirts, Tops,
-        T_Shirts, Sweatershirts, Pants, Skirts, Swimwear, Underwear
+        T_Shirts, Sweatshirts, Pants, Skirts, Swimwear, Underwear
     }
     public enum WBags
     {

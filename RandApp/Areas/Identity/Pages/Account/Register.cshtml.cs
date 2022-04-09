@@ -86,7 +86,7 @@ namespace RandApp.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            ViewData["roles"] = _roleManager.Roles.ToList();
+            //ViewData["roles"] = _roleManager.Roles.ToList();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }

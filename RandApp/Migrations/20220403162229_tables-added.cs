@@ -56,8 +56,6 @@ namespace RandApp.Migrations
                     ItemType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ItemCategory = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Size = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaterialType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DesignedFor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
@@ -192,6 +190,46 @@ namespace RandApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ItemColors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ItemId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemColors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemColors_ItemsTable_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "ItemsTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemSizes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemSize = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ItemId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemSizes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemSizes_ItemsTable_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "ItemsTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShoppingCartItems",
                 columns: table => new
                 {
@@ -258,6 +296,16 @@ namespace RandApp.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ItemColors_ItemId",
+                table: "ItemColors",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemSizes_ItemId",
+                table: "ItemSizes",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCartItems_ItemId",
                 table: "ShoppingCartItems",
                 column: "ItemId");
@@ -284,6 +332,12 @@ namespace RandApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ItemColors");
+
+            migrationBuilder.DropTable(
+                name: "ItemSizes");
 
             migrationBuilder.DropTable(
                 name: "ShoppingCartItems");

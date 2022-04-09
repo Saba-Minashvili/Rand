@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RandApp.DTOs;
 using RandApp.Models;
 using RandApp.Repositories.Abstraction;
 using System;
@@ -18,22 +20,35 @@ namespace RandApp.Controllers
     {
         private readonly IRepository<Item> _itemRepo = default;
         private readonly IRepository<User> _userRepo = default;
+        private readonly IRepository<ItemColors> _itemColorsRepo = default;
+        private readonly IRepository<ItemSizes> _itemSizesRepo = default;
         private readonly IRepository<CartItem> _cartItemRepo = default;
+        private readonly IMapper _mapper = default;
         private IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(IRepository<Item> itemRepo, IRepository<User> userRepo, IRepository<CartItem> cartItemRepo, IWebHostEnvironment webHostEnvironment)
+        public AdminController(IRepository<Item> itemRepo,
+            IRepository<User> userRepo,
+            IRepository<CartItem> cartItemRepo,
+            IRepository<ItemColors> itemColorsRepo,
+            IRepository<ItemSizes> itemSizesRepo,
+            IWebHostEnvironment webHostEnvironment,
+            IMapper mapper)
         {
             _itemRepo = itemRepo;
             _userRepo = userRepo;
             _cartItemRepo = cartItemRepo;
+            _itemColorsRepo = itemColorsRepo;
+            _itemSizesRepo = itemSizesRepo;
             _webHostEnvironment = webHostEnvironment;
+            _mapper = mapper;
         }
 
         [Route("/admin")]
         public async Task<IActionResult> Index()
         {
-            var items = await _itemRepo.ReadAsync();
-            return View(items);
+            var items = await _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).ToListAsync();
+            var result = _mapper.Map<IEnumerable<ItemDto>>(items);
+            return View(result);
         }
 
 
@@ -45,7 +60,7 @@ namespace RandApp.Controllers
         // POST Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateItem(Item item, IFormFile ItemPhoto)
+        public async Task<IActionResult> CreateItem(Item item, IFormFile ItemPhoto, List<string> Color, List<string> Size)
         {
             if (!ModelState.IsValid)
             {
@@ -56,6 +71,15 @@ namespace RandApp.Controllers
             var stream = new FileStream(path, FileMode.Create);
             await ItemPhoto.CopyToAsync(stream);
             item.ItemPhoto = ItemPhoto.FileName;
+
+            foreach (var color in Color)
+            {
+                item.Color.Add(new ItemColors() { ItemId = item.Id, ItemColor = color });
+            }
+            foreach (var size in Size)
+            {
+                item.Size.Add(new ItemSizes() { ItemId = item.Id, ItemSize = size });
+            }
 
             await _itemRepo.CreateAsync(item);
             stream.Close();
@@ -75,7 +99,8 @@ namespace RandApp.Controllers
                 return NotFound();
             }
 
-            return View(item);
+            var result = _mapper.Map<ItemDto>(item);
+            return View(result);
         }
 
         // POST Delete
@@ -89,37 +114,11 @@ namespace RandApp.Controllers
                 return NotFound();
             }
 
-            // My goal is to get all users and their shopping cart lists
-            // in order to search for items which are added in them
-            // So i could delete them from cart when i delete this particular items
-            // from admin page
-            // It is the worst practice to use
-            // and i am still working on it
             var users = _userRepo.ReadAsync().Result.ToList();
-            var cartItems = new List<CartItem>();
-            foreach (var user in users)
+
+            if (DeleteItemFromCart(users, item).Result && DeleteRelatedToItem(item).Result && DeletePhotosFromAssets(item))
             {
-                cartItems = _cartItemRepo.Get().Where(o => o.UserId == user.Id).Include(o => o.Item).ToListAsync().Result;
-                var result = cartItems.FirstOrDefault(o => o.Item.Id == item.Id);
-                if (result != null)
-                {
-                    await _cartItemRepo.DeleteAsync(result);
-                }
-            }
-
-
-
-            if (await _itemRepo.DeleteAsync(item))
-            {
-                // This code is needed to delete the photos of items
-                // which are located in wwwroot/assets folder
-                var path = Path.Combine(_webHostEnvironment.WebRootPath, "assets", item.ItemPhoto);
-                FileInfo file = new FileInfo(path);
-                if (file.Exists)
-                {
-                    file.Delete();
-                }
-
+                await _itemRepo.DeleteAsync(item);
                 return RedirectToAction("Index");
             }
 
@@ -133,26 +132,57 @@ namespace RandApp.Controllers
             {
                 return NotFound();
             }
-            var item = await _itemRepo.ReadByIdAsync(id);
+            var item = await _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).FirstOrDefaultAsync(o => o.Id == id);
             if (item == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            var result = _mapper.Map<ItemDto>(item);
+            return View(result);
         }
 
         // POST Update
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateItem(Item item)
+        public async Task<IActionResult> UpdateItem(Item item, List<string> Color, List<string> Size)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _itemRepo.UpdateAsync(item);
-                return RedirectToAction("Index");
+                return View();
             }
-            return View(item);
+
+            // this was needed because when i try to get item from "UpdateItem View, it doesn't include
+            // list parameters of "Color" and "Size" classes
+            // it can be said that it is some kind of overload of "Item" object
+            // that was sent from front via form
+            item = await _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).FirstOrDefaultAsync(o => o.Id == item.Id);
+
+            foreach (var color in Color)
+            {
+                if (item.Color.Where(o => o.ItemColor == color).Count() == 0)
+                {
+                    item.Color.Add(new ItemColors() { ItemId = item.Id, ItemColor = color });
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            foreach (var size in Size)
+            {
+                if (item.Size.Where(o => o.ItemSize == size).Count() == 0)
+                {
+                    item.Size.Add(new ItemSizes() { ItemId = item.Id, ItemSize = size });
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            await _itemRepo.UpdateAsync(item);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -293,6 +323,69 @@ namespace RandApp.Controllers
             }
 
             return result;
+        }
+
+        public async Task<bool> DeleteItemFromCart(List<User> users, Item item)
+        {
+            var cartItems = new List<CartItem>();
+
+            if (cartItems.Count > 0)
+            {
+                foreach (var user in users)
+                {
+                    cartItems = _cartItemRepo.Get().Where(o => o.UserId == user.Id).Include(o => o.Item).ToListAsync().Result;
+                    var cartItem = cartItems.FirstOrDefault(o => o.Item.Id == item.Id);
+                    if (cartItem != null)
+                    {
+                        await _cartItemRepo.DeleteAsync(cartItem);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteRelatedToItem(Item item)
+        {
+            // removing related itemColor objects which is connected to an item with FK
+            var itemColors = _itemColorsRepo.Get().Where(o => o.ItemId == item.Id).ToListAsync().Result;
+            // removing related itemSize objects which is connected to an item with FK
+            var itemSizes = _itemSizesRepo.Get().Where(o => o.ItemId == item.Id).ToListAsync().Result;
+            if (itemColors.Count > 0 || itemSizes.Count > 0)
+            {
+                foreach (var color in itemColors)
+                {
+                    await _itemColorsRepo.DeleteAsync(color);
+                }
+                foreach (var size in itemSizes)
+                {
+                    await _itemSizesRepo.DeleteAsync(size);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DeletePhotosFromAssets(Item item)
+        {
+            // This code is needed to delete the photos of items
+            // which are located in wwwroot/assets folder
+            var path = Path.Combine(_webHostEnvironment.WebRootPath, "assets", item.ItemPhoto);
+            FileInfo file = new FileInfo(path);
+            if (file.Exists)
+            {
+                file.Delete();
+                return true;
+            }
+
+            return false;
         }
     }
 }

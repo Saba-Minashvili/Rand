@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace RandApp.Models
 {
@@ -17,11 +18,11 @@ namespace RandApp.Models
         [Display(Name = "Item Name")]
         public string Name { get; set; }
         [Required]
-        [Display(Name = "Item Color")]
-        public string Color { get; set; }
+        [Display(Name = "Item Colors")]
+        public List<ItemColors> Color { get; set; } = new List<ItemColors>();
         [Required]
         [Display(Name = "Item Size")]
-        public string Size { get; set; }
+        public List<ItemSizes> Size { get; set; } = new List<ItemSizes>();
         [Required]
         [Display(Name = "Item Material Type")]
         public string MaterialType { get; set; }

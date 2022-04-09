@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RandApp.Models.Item>
+﻿@model IEnumerable<RandApp.DTOs.ItemDto>
 @using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<IdentityUser> SignInManager
@@ -7,18 +7,20 @@
     ViewData["Title"] = "Main";
 }
 
-<section class="bg-light p-5 text-dark text-center text-sm-left mb-5">
+<section class="bg-light p-5 text-dark text-center text-sm-left mb-5" style="background-color:white!important">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between">
-            <div>
+            <div class="showcase-left ">
                 <h1>ANZA</h1>
                 <p class="lead my-4">
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
                     dummy text ever since the 1500s.
                 </p>
-                <a href="#item-section" class="btn btn-primary btn-lg">Start Shopping</a>
+                <a href="#item-section" class="btn btn-dark btn-lg">Start Shopping</a>
             </div>
-            <img class="img-fluid d-none d-sm-block w-50" src="~/assets/RandLogo.png" />
+            <div class="showcase-right d-none d-sm-block w-50">
+                <img class="img-fluid" src="~/assets/randlogo (3).png" />
+            </div>
         </div>
     </div>
 </section>

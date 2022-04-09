@@ -1,8 +1,16 @@
-﻿@model RandApp.Models.Item
-
-<section class="item-details">
+﻿@model RandApp.DTOs.ItemDto
+<section class="item-details" id="@Model.Id">
     <div class="container">
         <a asp-controller="Item" asp-action="ReturnUrl" asp-route-returnUrl="@ViewBag.returnUrl" class="go-back-btn"><i class="fa-solid fa-arrow-left-long"></i>  Go Back</a>
+        <div class="added-successfuly-warn">
+            <div class="warn-info">
+                <p>Item has been added to your shopping cart.</p>
+            </div>
+            <div class="warn-nav">
+                <a class="btn btn-close btn-hide-warn">Close</a>
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-view-cart">View Cart</a>
+            </div>
+        </div>
         <div class="d-flex align-items-center justify-content-between mt-5">
             <aside class="mw-100 p-3 side-left">
                 <img class="item-img" src="~/assets/@Model.ItemPhoto" />
@@ -11,13 +19,29 @@
                 <h2>@Model.Name</h2>
                 <p>@Model.Description</p>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><span class="text-info">Color:</span> @Model.Color</li>
-                    <li class="list-group-item"><span class="text-info">Size:</span> @Model.Size</li>
+                    <li class="list-group-item">
+                        <span class="text-info">Color:</span>
+                        <select class="select-color">
+                            @foreach (var color in Model.Color)
+                            {
+                                <option value="@color.ItemColor.ToString()">@color.ItemColor</option>
+                            }
+                        </select>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="text-info">Size:</span>
+                        <select class="select-size">
+                            @foreach (var size in Model.Size)
+                            {
+                                <option value="@size.ItemSize.ToString()">@size.ItemSize</option>
+                            }
+                        </select>
+                    </li>
                     <li class="list-group-item"><span class="text-info">Designed For:</span> @Model.DesignedFor</li>
                     <li class="list-group-item"><span class="text-info">Price:</span> @Model.Price ₾</li>
                 </ul>
                 <div class="card-body">
-                    <a asp-controller="Cart" asp-action="Add" asp-route-ItemId="@Model.Id" class="btn btn-outline-dark add-to-cart-btn">Add To Cart</a>
+                    <a class="btn btn-outline-dark add-to-cart-btn">Add To Cart</a>
                 </div>
             </aside>
         </div>
@@ -26,6 +50,52 @@
 
 @section Styles {
     <style>
+        .added-successfuly-warn {
+            background-color: lightgreen;
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        .warn-info {
+            width: 82%;
+            vertical-align: central;
+        }
+
+            .warn-info p {
+                margin: 0;
+                padding: 0;
+            }
+
+        .warn-nav {
+            width: 18%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+            .warn-nav a {
+                color: black;
+                opacity: 0.8;
+            }
+
+        .btn-hide-warn:hover {
+            cursor: pointer;
+            color: black;
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        .btn-view-cart:hover {
+            cursor: pointer;
+            color: black;
+            opacity: 1;
+            font-weight: 500;
+        }
+
         .go-back-btn {
             text-decoration: none;
             color: black;
@@ -64,6 +134,11 @@
 
         .card-body {
             padding-left: 0;
+        }
+
+        .add-to-cart-btn:hover {
+            color: white !important;
+            cursor: pointer;
         }
 
         @@media only screen and (max-width:768px) {
@@ -108,4 +183,33 @@
             }
         }
     </style>
+}
+
+@section Scripts {
+    <script>
+        $('.add-to-cart-btn').on('click', function () {
+            var itemId = $('.item-details').attr('id');
+            var selectedItemColor = $('.select-color').val();
+            var selectedItemSize = $('.select-size').val();
+            $.ajax({
+                url: '@Url.Action("Add","Cart")',
+                type: 'GET',
+                dataType: 'json',
+                data: { itemId: itemId, itemColor: selectedItemColor, itemSize: selectedItemSize },
+                success: function (res) {
+                    if (res) {
+                        $('.added-successfuly-warn').css('display', 'flex');
+                    }
+                    console.log(res);
+                },
+                error: function (err) {
+                    console.log(err.responseText);
+                }
+            });
+        })
+
+        $('.btn-hide-warn').on("click", function () {
+            $('.added-successfuly-warn').css('display', 'none');
+        })
+    </script>
 }

@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using RandApp.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RandApp.Models
+namespace RandApp.DTOs
 {
-    public class CartItem : BaseEntity
+    public class CartItemDto : BaseEntity
     {
-        public Item Item { get; set; }
+        public ItemDto Item { get; set; }
         public int? UserId { get; set; }
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public UserDto User { get; set; }
         public int Quantity { get; set; }
         public string SelectedItemColor { get; set; }
         public string SelectedItemSize { get; set; }

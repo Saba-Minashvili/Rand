@@ -2,7 +2,7 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
-    //var roles = (List<IdentityRole>)ViewData["roles"];
+    var roles = (List<IdentityRole>)ViewData["roles"];
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -54,6 +54,7 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
+            <!-- Input field for role selection -->
             <!--
                 <div class="form-group">
                 <label asp-for="Input.Name"></label>

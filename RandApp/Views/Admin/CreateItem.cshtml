@@ -54,20 +54,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Color" class="control-label"></label>
-                <select asp-for="@Model.Color" class="form-control">
-                    <option value="" selected>Select Item Color</option>
+                <select asp-for="@Model.Color" multiple class="form-control">
                     @foreach (var color in Enum.GetValues(typeof(RandApp.Enums.ItemColor)))
                     {
                         <option value="@color.ToString()">@color</option>
                     }
-                    <option value="Other">Other</option>
                 </select>
-                <input id="otherColorInp" asp-for="@Model.Color" class="form-control" style="display:none; margin-top:8px" placeholder="Enter Item Color" />
                 <span asp-validation-for="@Model.Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Size" class="control-label"></label>
-                <select asp-for="@Model.Size" class="form-control">
+                <select asp-for="@Model.Size" multiple class="form-control">
                 </select>
                 <span asp-validation-for="@Model.Size" class="text-danger"></span>
             </div>
@@ -179,7 +176,7 @@
                     error: function (err) {
                         console.log(err.responseText);
                     }
-                });
+                    });
             } else {
                 $.ajax({
                     url: '@Url.Action("LoadItemSizes", "Admin")',
@@ -224,14 +221,16 @@
 
         // displays "other option" input in order to enter custom item color
         // if desired is not given in the list
-        $('#Color').on('change', function () {
+        /*
+         $('#Color').on('change', function () {
             var selectedColorVal = $(this).val();
-            if (selectedColorVal.toLowerCase() == "other") {
+            if (selectedColorVal.length == 1 && selectedColorVal.toLowerCase() == "other") {
                 $('#otherColorInp').show();
             } else {
                 $('#otherColorInp').hide();
             }
         })
+        */
     </script>
 }
 

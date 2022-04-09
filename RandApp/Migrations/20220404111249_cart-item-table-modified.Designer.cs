@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RandApp.Data;
+using RandApp.DAL;
 
 namespace RandApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220313134830_tables-added")]
-    partial class tablesadded
+    [Migration("20220404111249_cart-item-table-modified")]
+    partial class cartitemtablemodified
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -230,6 +230,12 @@ namespace RandApp.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SelectedItemColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SelectedItemSize")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
@@ -248,10 +254,6 @@ namespace RandApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -284,13 +286,49 @@ namespace RandApp.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("Size")
-                        .IsRequired()
+                    b.HasKey("Id");
+
+                    b.ToTable("ItemsTable");
+                });
+
+            modelBuilder.Entity("RandApp.Models.ItemColors", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ItemColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("ItemColors");
+                });
+
+            modelBuilder.Entity("RandApp.Models.ItemSizes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemSize")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ItemsTable");
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("ItemSizes");
                 });
 
             modelBuilder.Entity("RandApp.Models.User", b =>
@@ -389,6 +427,32 @@ namespace RandApp.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RandApp.Models.ItemColors", b =>
+                {
+                    b.HasOne("RandApp.Models.Item", "Item")
+                        .WithMany("Color")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("RandApp.Models.ItemSizes", b =>
+                {
+                    b.HasOne("RandApp.Models.Item", "Item")
+                        .WithMany("Size")
+                        .HasForeignKey("ItemId");
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("RandApp.Models.Item", b =>
+                {
+                    b.Navigation("Color");
+
+                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("RandApp.Models.User", b =>

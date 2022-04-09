@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RandApp.Data;
+using RandApp.DAL;
 using RandApp.Models;
 using RandApp.Repositories.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -50,9 +51,9 @@ namespace RandApp.Repositories
             {
                 return (await _db.SaveChangesAsync()) >= 0;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 

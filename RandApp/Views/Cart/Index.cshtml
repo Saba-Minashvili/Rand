@@ -21,6 +21,8 @@
                 <tr>
                     <th></th>
                     <th>Name</th>
+                    <th>Color</th>
+                    <th>Size</th>
                     <th>Quantity</th>
                     <th>Price(Per)</th>
                     <th>Sum</th>
@@ -38,6 +40,12 @@
                         </td>
                         <td>@item.Item.Name</td>
                         <td>
+                            @item.SelectedItemColor
+                        </td>
+                        <td>
+                            @item.SelectedItemSize
+                        </td>
+                        <td>
                             @item.Quantity
                         </td>
                         <td>@item.Item.Price ₾</td>
@@ -49,7 +57,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="4" style="text-align:right">Total: </th>
+                    <th colspan="6" style="text-align:right">Total: </th>
                     <td>@Model.CartTotal ₾</td>
                 </tr>
             </tfoot>

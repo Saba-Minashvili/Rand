@@ -1,7 +1,8 @@
-﻿@model IEnumerable<RandApp.Models.Item>
+﻿@model IEnumerable<RandApp.DTOs.ItemDto>
 @{
     ViewData["Title"] = "Main";
 }
+
 <h4>All Items</h4>
 <hr />
 <section id="item-section">
@@ -18,8 +19,24 @@
                             <p class="card-text">@item.Description</p>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><span class="text-info">Size:</span> @item.Size</li>
-                            <li class="list-group-item"><span class="text-info">Color:</span> @item.Color</li>
+                            <li class="list-group-item">
+                                <span class="text-info">Size:</span>
+                                <select class="select-size">
+                                    @foreach (var color in item.Color)
+                                    {
+                                        <option value="@color.ItemColor.ToString()">@color.ItemColor</option>
+                                    }
+                                </select>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="text-info">Color:</span>
+                                <select class="select-size">
+                                    @foreach (var size in item.Size)
+                                    {
+                                        <option value="@size.ItemSize.ToString()">@size.ItemSize</option>
+                                    }
+                                </select>
+                            </li>
                             <li class="list-group-item"><span class="text-info">Material Type:</span> @item.MaterialType</li>
                             <li class="list-group-item"><span class="text-info">Designed For:</span> @item.DesignedFor</li>
                             <li class="list-group-item"><span class="text-info">Price:</span> @item.Price ₾</li>

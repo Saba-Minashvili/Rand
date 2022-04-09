@@ -1,11 +1,11 @@
-﻿using RandApp.Models;
+﻿using RandApp.DTOs;
 using System.Collections.Generic;
 
 namespace RandApp.ViewModels
 {
     public class ShoppingCartViewModel
     {
-        public List<CartItem> CartItems { get; set; }
+        public List<CartItemDto> CartItems { get; set; }
         public double CartTotal { get; set; }
     }
 }

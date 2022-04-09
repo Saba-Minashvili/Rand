@@ -8,21 +8,23 @@ namespace RandApp.Controllers
 {
     public class RoleController : Controller
     {
-        RoleManager<IdentityRole> roleManager;
+        RoleManager<IdentityRole> _roleManager = default;
 
         public RoleController(RoleManager<IdentityRole> roleManager)
         {
-            this.roleManager = roleManager;
+            _roleManager = roleManager;
         }
 
+        // need to comment "Authorize" attribute in order to use "Role" view and controller
         [Authorize(Policy = "readpolicy")]
         [Route("/Role/Index")]
         public IActionResult Index()
         {
-            var roles = roleManager.Roles.ToList();
+            var roles = _roleManager.Roles.ToList();
             return View(roles);
         }
 
+        // need to comment "Authorize" attribute in order to use "Role" view and controller
         [Authorize(Policy = "writepolicy")]
         [Route("/Role/Create")]
         public IActionResult Create()
@@ -31,9 +33,9 @@ namespace RandApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(IdentityRole role)
+        public async Task<IActionResult> CreatePost(IdentityRole role)
         {
-            await roleManager.CreateAsync(role);
+            await _roleManager.CreateAsync(role);
             return RedirectToAction("Index");
         }
     }

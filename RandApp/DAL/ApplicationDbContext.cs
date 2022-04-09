@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RandApp.Models;
 
-namespace RandApp.Data
+namespace RandApp.DAL
 {
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
@@ -15,10 +15,17 @@ namespace RandApp.Data
         public DbSet<Item> ItemsTable { get; set; }
         public DbSet<User> UsersTable { get; set; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
+        public DbSet<ItemColors> ItemColors { get; set; }
+        public DbSet<ItemSizes> ItemSizes { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            modelBuilder.Entity<Item>()
+                .HasMany(o => o.Color)
+                .WithOne(o => o.Item)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model RandApp.Models.Item
+﻿@model RandApp.DTOs.ItemDto
 
 <h4>Update Item</h4>
 <hr />
@@ -57,20 +57,31 @@
             <div class="form-group">
                 <label asp-for="@Model.Color" class="control-label"></label>
                 <select asp-for="@Model.Color" class="form-control">
-                    <option value="@Model.Color" selected>@Model.Color</option>
                     @foreach (var color in Enum.GetValues(typeof(RandApp.Enums.ItemColor)))
                     {
-                        <option value="@color.ToString()">@color</option>
+                        <option value="@color">@color</option>
                     }
                     <option value="Other">Other</option>
                 </select>
-                <input id="otherColorInp" asp-for="@Model.Color" class="form-control" style="display:none; margin-top:8px" placeholder="Enter Item Color" />
+                <!-- This hidden select is used to get only selected colors of current item -->
+                <select hidden multiple class="form-control" id="SelectedColors">
+                    @foreach (var color in Model.Color)
+                    {
+                        <option value="@color.ItemColor">@color.ItemColor</option>
+                    }
+                </select>
                 <span asp-validation-for="@Model.Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Size" class="control-label"></label>
                 <select asp-for="@Model.Size" class="form-control">
-                    <option value="@Model.Size" selected>@Model.Size</option>
+                </select>
+                <!-- This hidden select is used to get only selected sizes of current item -->
+                <select hidden multiple class="form-control" id="SelectedSizes">
+                    @foreach (var size in Model.Size)
+                    {
+                        <option value="@size.ItemSize">@size.ItemSize</option>
+                    }
                 </select>
                 <span asp-validation-for="@Model.Size" class="text-danger"></span>
             </div>
@@ -97,6 +108,8 @@
         var selectedItemTypeVal = $("#ItemType").val();
         var selectedDesignedVal = $("#DesignedFor").val();
         var selectedCategoryVal = $("#ItemCategory").val();
+        var itemColors = new Array();
+        var itemSizes = new Array();
         $(document).ready(function () {
             if ($("#DesignedFor").val() != "") {
                 $.ajax({
@@ -150,6 +163,14 @@
                                 $('#Size').append(
                                     $('<option></option>').val(text).html(text)
                                 );
+                                itemSizes.push(text);
+                            });
+                            $("#SelectedSizes option").each(function () {
+                                for (var i = 0; i < itemSizes.length; i++) {
+                                    if ($(this).val() == itemSizes[i]) {
+                                        $("[value=" + itemSizes[i] + "]").attr("selected", "selected");
+                                    }
+                                }
                             });
                         },
                         error: function (err) {
@@ -182,6 +203,19 @@
                     });
                 }
             }
+
+            if ($("#Color option").val() != "") {
+                $("#Color option").each(function () {
+                    itemColors.push($(this).val());
+                })
+                $("#SelectedColors option").each(function () {
+                    for (var i = 0; i < itemColors.length; i++) {
+                        if ($(this).val() == itemColors[i]) {
+                            $("[value=" + itemColors[i] + "]").attr("selected", "selected");
+                        }
+                    }
+                });
+            }
         });
 
         function SetValue(input) {
@@ -201,19 +235,6 @@
             } else {
                 $('#MaterialType').removeAttr('disabled');
                 $('#otherMaterialInp').hide();
-            }
-        });
-
-        // displays "other option" input in order to enter custom item color
-        // if desired is not given in the list
-        $('#Color').on('change', function () {
-            var selectedColorVal = $(this).val();
-            if (selectedColorVal.toLowerCase() == "other") {
-                $('#Color').attr('disabled','disabled');
-                $('#otherColorInp').show();
-            } else {
-                $('#Color').removeAttr('disabled');
-                $('#otherColorInp').hide();
             }
         });
     </script>
