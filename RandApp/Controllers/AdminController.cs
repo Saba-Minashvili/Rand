@@ -158,11 +158,17 @@ namespace RandApp.Controllers
             // that was sent from front via form
             item = await _itemRepo.Get().Include(o => o.Color).Include(o => o.Size).FirstOrDefaultAsync(o => o.Id == item.Id);
 
+
+            // REMINDER: The logic which handles the case when i delete values from the list instead of adding still has not been written.
             foreach (var color in Color)
             {
-                if (item.Color.Where(o => o.ItemColor == color).Count() == 0)
+                if (!item.Color.Where(o => o.ItemColor == color).Any())
                 {
                     item.Color.Add(new ItemColors() { ItemId = item.Id, ItemColor = color });
+                }
+                else if (!item.Color.Where(o => o.ItemColor != color).Any() && color.Length < item.Color.Count)
+                {
+                    item.Color.Remove(item.Color.FirstOrDefault(o => o.ItemColor == color));
                 }
                 else
                 {
@@ -171,9 +177,13 @@ namespace RandApp.Controllers
             }
             foreach (var size in Size)
             {
-                if (item.Size.Where(o => o.ItemSize == size).Count() == 0)
+                if (!item.Size.Where(o => o.ItemSize == size).Any())
                 {
                     item.Size.Add(new ItemSizes() { ItemId = item.Id, ItemSize = size });
+                }
+                else if (!item.Size.Where(o => o.ItemSize != size).Any() && size.Length < item.Size.Count)
+                {
+                    item.Size.Remove(item.Size.FirstOrDefault(o => o.ItemSize == size));
                 }
                 else
                 {
@@ -294,7 +304,7 @@ namespace RandApp.Controllers
                 switch (designedFor.ToLower(), category.ToLower())
                 {
                     case ("kids", "shoes"):
-                        result = Enum.GetNames(typeof(Enums.KShoes)).ToList();
+                        result = Enum.GetNames(typeof(Enums.KShoeSize)).ToList();
                         break;
                     case ("men", "shoes"):
                     case ("women", "shoes"):

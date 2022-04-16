@@ -16,12 +16,12 @@
                 <img class="item-img" src="~/assets/@Model.ItemPhoto" />
             </aside>
             <aside class="mw-100 p-3 side-right text-sm-center">
-                <h2>@Model.Name</h2>
-                <p>@Model.Description</p>
+                <h2 class="text-capitalize">@Model.Name</h2>
+                <p class="text-capitalize">@Model.Description</p>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <span class="text-info">Color:</span>
-                        <select class="select-color">
+                        <select class="select-color custom-select">
                             @foreach (var color in Model.Color)
                             {
                                 <option value="@color.ItemColor.ToString()">@color.ItemColor</option>
@@ -30,7 +30,7 @@
                     </li>
                     <li class="list-group-item">
                         <span class="text-info">Size:</span>
-                        <select class="select-size">
+                        <select class="select-size custom-select">
                             @foreach (var size in Model.Size)
                             {
                                 <option value="@size.ItemSize.ToString()">@size.ItemSize</option>
@@ -141,23 +141,9 @@
             cursor: pointer;
         }
 
-        @@media only screen and (max-width:768px) {
-            .side-left {
-                width: 50%;
-                max-height: 600px;
-            }
-
-            .side-right {
-                width: 40%;
-            }
-
-                .side-right h2 {
-                    font-size: 19px;
-                }
-
-                .side-right p {
-                    font-size: 13px;
-                }
+        .custom-select {
+            width: 30%;
+            text-align: center;
         }
 
         @@media only screen and (max-width:768px) {
@@ -181,6 +167,36 @@
             .add-to-cart-btn {
                 font-size: 11px;
             }
+
+            .added-successfuly-warn {
+                background-color: lightgreen;
+                width: 100%;
+                margin-top: 15px;
+                padding: 10px;
+                display: none;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 5px;
+            }
+
+            .warn-info {
+                width: 70%;
+                font-size: 12px;
+                vertical-align: central;
+            }
+
+            .warn-nav {
+                width: 30%;
+                display: flex;
+                justify-content: space-around;
+            }
+
+                .warn-nav a {
+                    color: black;
+                    width: auto;
+                    font-size: 11px;
+                    opacity: 0.8;
+                }
         }
     </style>
 }

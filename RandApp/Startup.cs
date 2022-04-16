@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ using RandApp.Repositories;
 using RandApp.Repositories.Abstraction;
 using RandApp.Services;
 using RandApp.Services.Abstraction;
+using RandApp.Services.EmailSender;
 
 namespace RandApp
 {
@@ -31,7 +33,7 @@ namespace RandApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("RandAppDbConnectionString")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                  .AddDefaultUI()
                  .AddEntityFrameworkStores<ApplicationDbContext>()
                  .AddDefaultTokenProviders();
@@ -48,6 +50,7 @@ namespace RandApp
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(ICloudinaryService), typeof(CloudinaryService));
             services.AddAutoMapper(typeof(ObjMapper));
+            services.AddTransient<IEmailSender, CustomEmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -93,6 +93,11 @@ namespace RandApp.Areas.Identity.Pages.Account
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
+                if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError(string.Empty, "Confirm your email to sign in.");
+                    return Page();
+                }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
